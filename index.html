@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NF방재 제품 지구본</title>
+<meta name="description" content="㈜엔에프방재의 화재 방재 제품 29종. 전기차·데이터센터·물류창고 등 전기화 시대의 화재 위험에 대응하는 차화·소화·방폭 제품을 제품군별로 살펴보고 문의할 수 있습니다.">
+<meta name="theme-color" content="#16181d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<div class="prog" id="prog" aria-hidden="true"></div>
+
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="logo" href="#top">(주)엔에프방재 <small>NF119</small></a>
+    <nav class="nav" aria-label="주 메뉴">
+      <a href="#units">제품군</a><a href="#products">제품</a><a href="#tech">기술</a>
+      <a href="#cert">시험 · 인증</a><a href="#sites">현장별 구성</a><a href="#process">도입 절차</a><a href="#faq">FAQ</a>
+    </nav>
+    <button class="btn btn-brand btn-sm" data-ask-open><span class="ms" style="font-size:18px">mail</span>견적 문의</button>
+    <button class="ico-btn burger" id="burger" aria-label="메뉴 열기"><span class="ms">menu</span></button>
+  </div>
+</header>
+
+<!-- ── 히어로 : 제품 은하 ─────────────────────────────── -->
+<div class="hero" id="hero">
+  <div class="stage" id="stage">
+    <canvas id="galaxy" aria-label="제품 지구본 — 썸네일 하나가 제품 하나입니다. 드래그해서 돌릴 수 있습니다" role="img"></canvas>
+    <div class="vig"></div>
+    <div class="tip" id="tip"><small></small><b></b><em></em></div>
+
+    <div class="h-lock" id="top">
+      <div class="eye">전기화 시대의 새로운 안전 기준</div>
+      <h1>리튬 배터리와 전기 설비 화재에<br>대응하는 제품 29종</h1>
+      <p class="sub">발화 예방부터 확산 차단, 초기 진압까지. 지하주차장 · 데이터센터 · 물류창고 · 산업시설에
+        기존 설비를 철거하지 않고 적용하는 차화 · 소화 · 방폭 제품을 현장 실측 규격으로 제작합니다.</p>
+      <div class="cta">
+        <button class="btn btn-brand" id="explore"><span class="ms" style="font-size:18px">public</span>제품 지구본 돌려보기</button>
+        <a class="btn btn-ghost" href="#products">제품 목록으로</a>
+      </div>
+    </div>
+
+    <div class="h-mid" aria-hidden="true">
+      <div class="eye">PRODUCT GLOBE</div>
+      <h2>제품 29종이 한 구면 위에 있습니다</h2>
+      <p>테두리 색이 제품군입니다. 끌어서 돌리고, 썸네일을 누르면 상세가 열립니다.</p>
+    </div>
+
+    <div class="legend" id="legend"><div class="lt">제품군 — 올려 놓으면 해당 제품만 밝아집니다</div></div>
+    <div class="h-hint"><span class="ms">drag_pan</span>끌어서 돌리기 · 썸네일 클릭으로 상세 보기</div>
+    <div class="h-cue"><span></span>SCROLL</div>
+  </div>
+</div>
+
+<!-- ── 개요 스트립 ────────────────────────────────────── -->
+<div class="strip">
+  <div class="wrap">
+    <div class="lead"><b>㈜엔에프방재</b>는 나노세라믹 차화 소재, 마이크로캡슐 소화약제, 발포알루미늄 구조재를 직접 개발해
+      국내에서 생산합니다. 규격서 15종에 수록된 29개 제품 전부가 자사 제조이며, 시트 · 패드 · 격막류는 도면 기준으로 맞춤 제작합니다.</div>
+    <div class="k"><b>6</b><small>제품군</small></div>
+    <div class="k"><b>29</b><small>수록 제품</small></div>
+    <div class="k"><b>1,200<span>℃</span></b><small>내열 성능 · 2시간 화염 인가</small></div>
+    <div class="k"><b>6</b><small>특허 출원</small></div>
+  </div>
+</div>
+
+<!-- ── 제품군 ─────────────────────────────────────────── -->
+<section class="sec" id="units">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">PRODUCT UNITS</div>
+      <h2>현장 적용 기준으로 나눈 6개 제품군</h2>
+      <p>제품군을 선택하면 해당 제품만 목록에 표시됩니다. 은하의 팔 색과 같은 색으로 표시했습니다.</p></div></div>
+    <div class="units" id="unitsGrid"></div>
+  </div>
+</section>
+
+<!-- ── 제품 목록 ──────────────────────────────────────── -->
+<section class="sec alt" id="products" style="padding-top:0">
+  <div class="tools" id="tools">
+    <div class="wrap">
+      <div class="tabs" id="tabs"></div>
+      <label class="srch"><span class="ms">search</span><input id="q" type="search" placeholder="제품명 · 용도 · 소재" autocomplete="off" aria-label="제품 검색"></label>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="sh" style="margin-bottom:28px"><div><div class="eye">PRODUCT LIST</div>
+      <h2>제품 29종</h2>
+      <p>카드를 선택하면 규격 · 용도 · 특징이 열리고, 비교함에 담아 최대 4개까지 규격을 나란히 볼 수 있습니다.</p></div>
+      <div class="side"><a class="btn btn-line btn-sm" href="assets/docs/nf119-product-proposal.pdf" download><span class="ms" style="font-size:18px">download</span>제안서 PDF</a></div></div>
+    <div class="cnt" id="cnt"></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <div class="none" id="none" hidden>검색 결과가 없습니다.</div>
+  </div>
+</section>
+
+<!-- ── 핵심 기술 ──────────────────────────────────────── -->
+<section class="sec" id="tech">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">TECHNOLOGY</div>
+      <h2>제품 형태는 달라도 바탕은 세 가지 소재 기술입니다</h2>
+      <p>29개 제품은 아래 세 기술을 형태만 바꿔 적용한 결과물입니다. 항목을 열면 원리와 적용 제품이 나옵니다.</p></div></div>
+    <div class="acc" id="tech-acc"></div>
+  </div>
+</section>
+
+<!-- ── 시험 · 인증 ───────────────────────────────────── -->
+<section class="sec alt" id="cert">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">CERTIFICATION</div>
+      <h2>확보된 인증과 진행 중인 인증을 구분해 적었습니다</h2>
+      <p>규격서에 기재된 내용 그대로입니다. 제안서 제출 시점 기준으로 인증 상태를 다시 확인해 드립니다.</p></div></div>
+    <div class="two">
+      <div>
+        <h4 class="sub">특허 출원</h4><p class="hint">6건</p>
+        <table class="t"><tbody id="patents"></tbody></table>
+        <h4 class="sub" style="margin-top:40px">시험 · 성능 데이터</h4><p class="hint">발포알루미늄</p>
+        <table class="t"><tbody id="astm"></tbody></table>
+      </div>
+      <div>
+        <h4 class="sub">시험기관 · 인증 상태</h4><p class="hint">12개 항목</p>
+        <table class="t"><tbody id="certs"></tbody></table>
+        <p class="fnote">공통 — ROHS 경구/경피 독성 이상 없음 · 장기 보관 시 크랙 및 층 분리 없음</p>
+      </div>
+    </div>
+    <div class="cmp">
+      <div>
+        <h4 class="sub">발포알루미늄 방폭 실증</h4><p class="hint">Steel 도어 대비</p>
+        <table class="t"><tbody>
+          <tr><th>두께</th><td>200 ~ 300mm</td><td class="hi">140 ~ 180mm</td></tr>
+          <tr><th>무게</th><td>1.5 ~ 2.2 ton/m³</td><td class="hi">0.3 ~ 0.5 ton/m³</td></tr>
+          <tr><th>방폭 성능</th><td>보통</td><td class="hi">우수</td></tr>
+          <tr><th>외부 폭발 시 내부 압력 변화</th><td>위험</td><td class="hi">안전</td></tr>
+          <tr><th>에너지 효율성</th><td>보통</td><td class="hi">우수</td></tr>
+        </tbody></table>
+        <p class="hint" style="margin-top:8px">왼쪽 Steel 재질 · 오른쪽 Aluminum Foam</p>
+      </div>
+      <p class="note">챔버 내부에 TNT 140g을 설치해 폭파한 시험입니다. 방폭패널 50T로 보호된 SS400 2T 시험편을 비교했습니다.
+        외부 폭격 시 발포알루미늄의 내충격성으로 1차 충격이 흡수되어 격납고 내 피해를 최소화하며, Steel Door 200T 대비 무게를
+        1/5로 줄이면서도 우수한 방폭 성능을 확보합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 현장별 구성 ───────────────────────────────────── -->
+<section class="sec" id="sites">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">APPLICATION</div>
+      <h2>현장 유형별 제품 구성</h2>
+      <p>현장 유형을 고르면 함께 제안하는 제품 구성이 표시됩니다. 그대로 문의에 담거나 목록에서 확인할 수 있습니다.</p></div></div>
+    <div class="seg" id="seg" role="tablist"></div>
+    <div class="site-pane" id="sitePane"></div>
+  </div>
+</section>
+
+<!-- ── 도입 절차 ──────────────────────────────────────── -->
+<section class="sec alt" id="process">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">PROCESS</div>
+      <h2>현장 진단부터 사후관리까지 4단계</h2>
+      <p>대부분의 제품은 기존 설비를 철거하지 않고 덮거나 부착하거나 도포하는 방식이라 시공 부담이 크지 않습니다.</p></div></div>
+    <div class="steps" id="steps"></div>
+    <div class="submit reveal">
+      <h4>제안 시 제출 자료<small>현장 조건 확인 후 일괄 제공</small></h4>
+      <ul>
+        <li><span class="ms">check</span>제품 규격서 15종 (rev 1.1)</li><li><span class="ms">check</span>시험성적서 · 자가인증서</li>
+        <li><span class="ms">check</span>현장 적용 도면</li><li><span class="ms">check</span>수량 산출서</li>
+        <li><span class="ms">check</span>시공 사례</li><li><span class="ms">check</span>견적서</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ───────────────────────────────────────────── -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sh reveal"><div><div class="eye">FAQ</div>
+      <h2>자주 받는 질문</h2></div></div>
+    <div class="acc faq" id="faq-acc"></div>
+  </div>
+</section>
+
+<!-- ── 문의 ───────────────────────────────────────────── -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <div class="eye" style="color:#7d9cf0">CONTACT</div>
+      <h2 style="margin-top:12px">현장 도면을 보내주시면<br>규격과 수량을 산출해 드립니다.</h2>
+      <p class="p">제품 선정이 어려우시면 현장 유형만 알려주셔도 됩니다. 화재 시나리오를 함께 검토한 뒤
+        필요한 제품 구성과 수량을 정리해 회신합니다.</p>
+      <div class="cta">
+        <button class="btn btn-brand" data-ask-open><span class="ms" style="font-size:18px">mail</span>견적 문의</button>
+        <a class="btn btn-ghost" href="tel:0315312077"><span class="ms" style="font-size:18px">call</span>031-531-2077</a>
+      </div>
+    </div>
+    <dl>
+      <dt>COMPANY</dt><dd>(주)엔에프방재</dd>
+      <dt>ADDRESS</dt><dd>경기도 포천시 군내면 용정경제로1길 72</dd>
+      <dt>TEL</dt><dd><a href="tel:0315312077">031-531-2077</a></dd>
+      <dt>FAX</dt><dd>070-4116-1762</dd>
+      <dt>E-MAIL</dt><dd><a href="mailto:daggunda@naver.com">daggunda@naver.com</a></dd>
+      <dt>WEB</dt><dd><a href="https://www.nf119.co.kr" target="_blank" rel="noopener">www.nf119.co.kr</a></dd>
+    </dl>
+  </div>
+</section>
+<footer class="foot"><div class="wrap">
+  <span>© 2026 (주)엔에프방재 All Rights Reserved.</span>
+  <span>제품 정보는 제품 규격서 15종(rev 1.1) 기준입니다.</span>
+</div></footer>
+
+<!-- ── 플로팅 ─────────────────────────────────────────── -->
+<div class="fab">
+  <button class="cmpb" id="cmpBtn"><span class="ms">compare_arrows</span>비교함 <b>0</b></button>
+  <button class="top" id="toTop" aria-label="맨 위로"><span class="ms">arrow_upward</span></button>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ── 모달 ───────────────────────────────────────────── -->
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="제품 상세"><div class="md" id="md"></div></div>
+
+<!-- ── 드로어 ─────────────────────────────────────────── -->
+<div class="dr-ov" id="drOv"></div>
+
+<aside class="dr left" id="drNav" aria-label="메뉴">
+  <div class="dr-h"><h3>메뉴</h3><button class="ico-btn" data-dr-close aria-label="닫기"><span class="ms">close</span></button></div>
+  <div class="dr-b"><nav class="mnav">
+    <a href="#units">제품군<span class="ms">chevron_right</span></a><a href="#products">제품<span class="ms">chevron_right</span></a>
+    <a href="#tech">기술<span class="ms">chevron_right</span></a><a href="#cert">시험 · 인증<span class="ms">chevron_right</span></a>
+    <a href="#sites">현장별 구성<span class="ms">chevron_right</span></a><a href="#process">도입 절차<span class="ms">chevron_right</span></a>
+    <a href="#faq">FAQ<span class="ms">chevron_right</span></a><a href="#contact">문의<span class="ms">chevron_right</span></a>
+  </nav></div>
+  <div class="dr-f"><button class="btn btn-brand" data-ask-open style="width:100%;justify-content:center">견적 문의</button></div>
+</aside>
+
+<aside class="dr" id="drCmp" aria-label="비교함">
+  <div class="dr-h"><h3>비교함</h3><button class="btn btn-line btn-sm" id="cmpClear">비우기</button><button class="ico-btn" data-dr-close aria-label="닫기"><span class="ms">close</span></button></div>
+  <div class="dr-b"></div>
+  <div class="dr-f"><button class="btn btn-line" data-dr-close>닫기</button><button class="btn btn-brand" id="cmpAsk">이 제품들로 문의</button></div>
+</aside>
+
+<aside class="dr" id="drAsk" aria-label="견적 문의">
+  <div class="dr-h"><h3>견적 문의</h3><button class="ico-btn" data-dr-close aria-label="닫기"><span class="ms">close</span></button></div>
+  <form class="dr-b" id="askForm" novalidate>
+    <div class="fld"><label>관심 제품</label><div class="picks" id="picks"></div></div>
+    <div class="fld"><label for="fCo">회사 · 기관명</label><input id="fCo" type="text" autocomplete="organization"><span class="err"></span></div>
+    <div class="fld"><label for="fName">담당자</label><input id="fName" type="text" autocomplete="name"><span class="err"></span></div>
+    <div class="fld"><label for="fTel">연락처 (전화 또는 이메일)</label><input id="fTel" type="text" autocomplete="tel"><span class="err"></span></div>
+    <div class="fld"><label for="fSite">현장 유형</label><select id="fSite"></select></div>
+    <div class="fld"><label for="fMsg">문의 내용</label><textarea id="fMsg" placeholder="현장 규모, 설치 위치, 도면 보유 여부 등을 적어 주시면 산출이 빨라집니다."></textarea><span class="err"></span>
+      <span class="h">보내기를 누르면 메일 앱이 열리고 내용이 채워집니다. 도면 파일은 메일에 첨부해 주세요.</span></div>
+    <input type="submit" hidden>
+  </form>
+  <div class="dr-f"><button class="btn btn-line" id="askCopy"><span class="ms" style="font-size:18px">content_copy</span>내용 복사</button>
+    <button class="btn btn-brand" type="submit" form="askForm"><span class="ms" style="font-size:18px">send</span>메일로 보내기</button></div>
+</aside>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/globe.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -2,8 +2,8 @@
    제품 지구본 — 캔버스 렌더러
    · 제품 29종 썸네일을 구면 위에 고르게 배치(피보나치 구)
    · 스크롤 진행도 p
-       0 → .80  회전(0.85바퀴)하며 커진다
-       .74 → .90 회전을 마친 뒤 setFrame()으로 받은 빈 영역으로 물러나 자리잡는다
+       0 → .72  회전(0.85바퀴)하며 커진다
+       .66 → .80 회전을 마친 뒤 setFrame()으로 받은 빈 영역으로 물러나 자리잡는다
    · 드래그 회전 + 관성, 유휴 시 느린 자전
    · 처음부터 앞면 썸네일 아래에 짧은 제품명. 라벨끼리·앞쪽 썸네일과 겹치면 생략
    · 호버 시 onHover(sprite), 클릭 시 onPick(id)
@@ -122,13 +122,13 @@
     /* 현재 진행도에서의 중심·반지름 */
     layout() {
       const w = this.w, h = this.h, p = this.p, m = Math.min(w, h);
-      const grow = ease(seg(p, 0, .42));
+      const grow = ease(seg(p, 0, .40));
       // 회전 중에는 위쪽 안내 문구와 겹치지 않도록 조금 아래·작게
       const R0 = m * .27, R1 = m * .32;
       let R = lerp(R0, R1, grow), cx = w * .5, cy = h * .59;
       const f = this.frame;
       if (f) {
-        const s = ease(seg(p, .74, .90));
+        const s = ease(seg(p, .66, .80));
         const pad = 34;                                    // 라벨이 들어갈 아래 여유
         // 1.24 = 원근으로 앞면이 커지는 몫(≈8%) + 썸네일 반지름(≈16%)
         const fR = Math.max(60, Math.min((f.x1 - f.x0) / 2, (f.y1 - f.y0 - pad) / 2) / 1.24);
@@ -146,7 +146,7 @@
         if (!this.o.reduce) this.spin += .0018;
       }
       const p = this.p;
-      const turn = ease(seg(p, 0, .80));
+      const turn = ease(seg(p, 0, .72));
       const yaw = this.yaw + this.spin + turn * TAU * .85, pitch = this.pitch;
       const { R, cx, cy } = this.layout();
       const dimAll = .4 + .6 * seg(p, 0, .24);              // 헤드라인이 걷히는 동안 또렷해진다
@@ -184,7 +184,7 @@
       ctx.globalAlpha = 1;
 
       /* 썸네일 크기 — 이전보다 약 25% 크게 */
-      const base = clamp(R * .2, 27, 60);
+      const base = clamp(R * .22, 28, 62);
       const items = this.sp.map(s => {
         const q = this.proj(this.rot(s.x, s.y, s.z, yaw, pitch), R, cx, cy);
         s.sx = q.x; s.sy = q.y; s.depth = q.z; s.sr = base * (.55 + .45 * (q.z + 1) / 2);

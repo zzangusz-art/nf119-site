@@ -14,7 +14,9 @@
 
   // 제품군 색 — 지구본 썸네일 테두리와 카드 점 색을 공유
   const UNIT_COLOR = { ev: '#5ad0ff', haz: '#ffb454', fire: '#c9d4ff', sup: '#ff6b6b', parts: '#6fe3a8', infra: '#b48cff' };
-  D.units.forEach(u => { u.color = UNIT_COLOR[u.key] || '#fff'; });
+  // 밝은 바탕(카드·배지)용 진한 색 — 지구본의 밝은 색과 같은 계열
+  const UNIT_INK = { ev: '#0b8fc4', haz: '#d67a12', fire: '#5a6fd0', sup: '#d63f3f', parts: '#17996a', infra: '#7c4ddb' };
+  D.units.forEach(u => { u.color = UNIT_COLOR[u.key] || '#fff'; u.ink = UNIT_INK[u.key] || '#0b3fbf'; });
   const unitOf = {}; D.units.forEach(u => u.ids.forEach(i => unitOf[i] = u));
   const byId = {}; D.products.forEach(p => byId[p.i] = p);
 
@@ -84,24 +86,26 @@
   }
 
   /* 타임라인 (p = 히어로 스크롤 진행도)
-     .04–.24 헤드라인 퇴장 · .26–.68 중간 안내 · 0–.80 회전 · .74–.90 지구본 자리잡기
-     .80–.92 범례 · .84–.93 소개글 · .86–.97 지표 4개(차례로, 숫자 카운트업) */
+     .04–.22 헤드라인 퇴장 · .24–.60 중간 안내 · 0–.72 회전 · .66–.80 지구본이 가운데 칸으로 자리잡음
+     .72–.82 범례 · .76–.84 제목 · .79–.86 소개글 · .81–.90 지표 4개(차례로, 숫자 카운트업)
+     .90–1 다 나온 화면을 잠시 붙잡아 둔다 */
   function seq() {
     const total = hero.offsetHeight - innerHeight;
     const raw = total <= 0 ? 1 : clamp((scrollY - hero.offsetTop) / total, 0, 1);
     const p = reduce ? (raw < .5 ? 0 : 1) : raw;         // 동작 줄이기: 두 장면만, 중간 움직임 없음
     gal.setProgress(p);
     const s = stage.style;
-    s.setProperty('--hl-o', (1 - seg(p, .04, .24)).toFixed(3));
+    s.setProperty('--hl-o', (1 - seg(p, .04, .22)).toFixed(3));
     s.setProperty('--cue-o', (1 - seg(p, .02, .10)).toFixed(3));
-    s.setProperty('--hm-o', (seg(p, .26, .36) * (1 - seg(p, .56, .68))).toFixed(3));
-    s.setProperty('--fd-o', seg(p, .76, .92).toFixed(3));
-    const sd = seg(p, .80, .92);
+    s.setProperty('--hm-o', (seg(p, .24, .32) * (1 - seg(p, .50, .60))).toFixed(3));
+    s.setProperty('--fd-o', seg(p, .68, .82).toFixed(3));
+    const sd = seg(p, .72, .82);
     s.setProperty('--sd-o', sd.toFixed(3));
     s.setProperty('--sd-pe', sd > .6 ? 'auto' : 'none');
-    s.setProperty('--bl-o', easeOut(seg(p, .84, .93)).toFixed(3));
+    s.setProperty('--ot-o', easeOut(seg(p, .76, .84)).toFixed(3));
+    s.setProperty('--bl-o', easeOut(seg(p, .79, .86)).toFixed(3));
     kpis.forEach((k, i) => {
-      const t = seg(p, .86 + i * .025, .95 + i * .008);
+      const t = seg(p, .81 + i * .02, .87 + i * .01);
       s.setProperty('--k' + i, easeOut(t).toFixed(3));
       setKpi(k, t);
     });
@@ -133,9 +137,9 @@
   const units = $('#unitsGrid');
   D.units.forEach((u, k) => {
     const b = el('button', 'unit reveal',
-      `<i class="dot"></i><span class="ms">${u.icon}</span><small>${u.en}</small><strong>${u.ko}</strong><p>${u.desc}</p>
-       <span class="n">${u.ids.length}종 보기 <span class="ms">arrow_forward</span></span>`);
-    b.style.setProperty('--c', u.color);
+      `<span class="ic"><span class="ms">${u.icon}</span></span><small>${u.en}</small><strong>${u.ko}</strong><p>${u.desc}</p>
+       <span class="n"><span><b>${u.ids.length}종</b> 제품 보기</span><span class="ms">arrow_forward</span></span>`);
+    b.style.setProperty('--c', u.ink);
     b.style.transitionDelay = (k * 60) + 'ms';
     b.addEventListener('click', () => { setUnit(u.key); document.getElementById('products').scrollIntoView({ behavior: 'smooth' }); });
     units.appendChild(b);
@@ -165,7 +169,7 @@
   }
   function skeleton(n) {
     grid.innerHTML = '';
-    for (let i = 0; i < n; i++) grid.appendChild(el('div', 'card sk', `<div class="th"></div><div class="l w1"></div><div class="l w2"></div><div class="l w3"></div><div class="l w4"></div>`));
+    for (let i = 0; i < n; i++) grid.appendChild(el('div', 'card sk', `<div class="th"></div><div class="bd"><div class="l w1"></div><div class="l w2"></div><div class="l w3"></div><div class="l w4"></div></div>`));
   }
   function render() {
     view = D.products.filter(match);
@@ -181,9 +185,12 @@
         const u = unitOf[p.i];
         const c = el('button', 'card', `
           <span class="th"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy" decoding="async"></span>
-          <span class="ut"><i style="--c:${u.color}"></i>${u.ko}</span>
-          <h3>${esc(p.name)}</h3><span class="mdl">${esc(p.model)}</span>
-          <p>${esc(p.ov)}</p>`);
+          <span class="bd">
+            <span class="ut" style="--c:${u.ink}"><i></i>${u.short}</span>
+            <h3>${esc(p.name)}</h3><span class="mdl">${esc(p.model)}</span>
+            <p>${esc(p.ov)}</p>
+            <span class="more">상세 보기<span class="ms">arrow_forward</span></span>
+          </span>`);
         c.addEventListener('click', () => openModal(p.i));
         grid.appendChild(c);
       });
@@ -219,7 +226,7 @@
         </div>
       </div>
       <div class="mtxt">
-        <div class="ut"><i style="--c:${u.color}"></i>${u.en} · ${u.ko}</div>
+        <div class="ut"><i style="--c:${u.ink}"></i>${u.en} · ${u.ko}</div>
         <h3>${esc(p.name)}</h3><div class="men">${esc(p.en)}</div>
         <div class="model">${esc(p.model)}</div>
         <p class="ov-p">${esc(p.ov)}</p>
@@ -349,7 +356,7 @@
   const tech = $('#tech-acc');
   D.tech.forEach((t, k) => {
     tech.appendChild(el('div', 'acc-i' + (k === 0 ? ' open' : ''), `
-      <button class="acc-h" aria-expanded="${k === 0}"><span class="num">TECH ${k + 1}</span>
+      <button class="acc-h" aria-expanded="${k === 0}"><span class="num">0${k + 1}</span>
         <span class="t">${esc(t.ko)}<small>${esc(t.en)}</small></span><span class="ms">expand_more</span></button>
       <div class="acc-b"><div><div class="acc-c"><p>${esc(t.body)}</p>
         <div class="ap"><small>적용 제품</small><b>${esc(t.applies)}</b></div></div></div></div>`));
@@ -357,7 +364,7 @@
   accordion(tech, false);
   const faq = $('#faq-acc');
   D.faq.forEach(([qq, a]) => faq.appendChild(el('div', 'acc-i', `
-    <button class="acc-h" aria-expanded="false"><span class="t">${esc(qq)}</span><span class="ms">expand_more</span></button>
+    <button class="acc-h" aria-expanded="false"><span class="num">Q</span><span class="t">${esc(qq)}</span><span class="ms">expand_more</span></button>
     <div class="acc-b"><div><div class="acc-c"><p>${esc(a)}</p></div></div></div>`)));
   accordion(faq, true);
 
@@ -373,11 +380,12 @@
   function showSite(k) {
     const s = D.sites[k];
     pane.innerHTML = `
-      <div><div class="eye">SITE ${String(k + 1).padStart(2, '0')}</div><h3 style="margin-top:10px">${esc(s.name)}</h3>
+      <div class="sp-l"><div class="eye">SITE ${String(k + 1).padStart(2, '0')}</div><h3 style="margin-top:10px">${esc(s.name)}</h3>
         <p class="d">이 현장 유형에 함께 제안하는 ${s.ids.length}종 구성입니다. 실제 구성은 현장 실사 후 조정합니다.</p>
         <div class="cta"><button class="btn btn-brand" id="siteAsk"><span class="ms" style="font-size:18px">mail</span>이 구성으로 문의</button>
         <button class="btn btn-line" id="siteList">목록에서 보기</button></div></div>
-      <div class="site-list">${s.ids.map(i => { const p = byId[i]; return `<button class="sitem" data-id="${i}"><img src="${p.img}" alt=""><span><b>${esc(p.name)}</b><small>${esc(p.model)}</small></span><span class="ms">chevron_right</span></button>`; }).join('')}</div>`;
+      <div class="sp-r"><div class="lbl2"><span>함께 제안하는 제품</span><span>${s.ids.length}종</span></div>
+      <div class="site-list">${s.ids.map(i => { const p = byId[i]; return `<button class="sitem" data-id="${i}"><img src="${p.img}" alt=""><span><b>${esc(p.name)}</b><small>${esc(p.model)}</small></span><span class="ms">chevron_right</span></button>`; }).join('')}</div></div>`;
     $('#siteAsk').addEventListener('click', () => openAsk(s.ids.slice(), s.name));
     $('#siteList').addEventListener('click', () => { pick = s.ids.slice(); pick.label = s.name; unit = '*'; qtext = ''; q.value = ''; $$('.tab', tabs).forEach(t => t.classList.remove('on')); render(); document.getElementById('products').scrollIntoView({ behavior: 'smooth' }); });
     $$('.sitem', pane).forEach(b => b.addEventListener('click', () => openModal(+b.dataset.id)));

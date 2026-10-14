@@ -38,7 +38,7 @@
     hdr.classList.toggle('solid', y > heroEnd + 12);
     const docH = document.documentElement.scrollHeight - innerHeight;
     prog.style.width = (docH > 0 ? y / docH * 100 : 0) + '%';
-    $('#toTop').classList.toggle('on', y > innerHeight * 1.2);
+    $('#toTop').classList.toggle('on', y > heroEnd + innerHeight * .5);   // 히어로 화면 위에는 띄우지 않는다
     let act = null;
     for (const id of secIds) { const s = document.getElementById(id); if (s && s.getBoundingClientRect().top <= innerHeight * .4) act = id; }
     navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + act));
@@ -65,18 +65,46 @@
   });
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+  // 지구본이 자리잡을 칸(.h-globe)을 실측해 넘긴다 — 화면 폭이 바뀌면 다시 잰다
+  function measureFrame() {
+    const sr = stage.getBoundingClientRect(), r = $('#hGlobe').getBoundingClientRect();
+    gal.setFrame({ x0: r.left - sr.left, x1: r.right - sr.left, y0: r.top - sr.top + 6, y1: r.bottom - sr.top - 2 });
+  }
+  addEventListener('resize', measureFrame);
+  if (document.fonts) document.fonts.ready.then(measureFrame);
+
+  // 지표 카운트업
+  const kpis = $$('.b-kpi .k').map(k => ({ el: $('b', k), n: +k.dataset.n, u: k.dataset.u || '', last: -1 }));
+  function setKpi(k, t) {
+    const v = Math.round(k.n * easeOut(t));
+    if (v === k.last) return; k.last = v;
+    k.el.innerHTML = v.toLocaleString('ko-KR') + (k.u ? `<i>${k.u}</i>` : '');
+  }
+
+  /* 타임라인 (p = 히어로 스크롤 진행도)
+     .04–.24 헤드라인 퇴장 · .26–.68 중간 안내 · 0–.80 회전 · .74–.90 지구본 자리잡기
+     .80–.92 범례 · .84–.93 소개글 · .86–.97 지표 4개(차례로, 숫자 카운트업) */
   function seq() {
     const total = hero.offsetHeight - innerHeight;
-    const p = reduce ? 1 : (total <= 0 ? 1 : clamp((scrollY - hero.offsetTop) / total, 0, 1));
+    const raw = total <= 0 ? 1 : clamp((scrollY - hero.offsetTop) / total, 0, 1);
+    const p = reduce ? (raw < .5 ? 0 : 1) : raw;         // 동작 줄이기: 두 장면만, 중간 움직임 없음
     gal.setProgress(p);
     const s = stage.style;
-    s.setProperty('--hl-o', (1 - seg(p, .05, .28)).toFixed(3));
-    s.setProperty('--cue-o', (1 - seg(p, .02, .12)).toFixed(3));
-    const mid = seg(p, .30, .45) * (1 - seg(p, .62, .78));
-    s.setProperty('--hm-o', mid.toFixed(3));
-    const lg = seg(p, .78, .92);
-    s.setProperty('--lg-o', lg.toFixed(3));
-    s.setProperty('--lg-pe', lg > .5 ? 'auto' : 'none');
+    s.setProperty('--hl-o', (1 - seg(p, .04, .24)).toFixed(3));
+    s.setProperty('--cue-o', (1 - seg(p, .02, .10)).toFixed(3));
+    s.setProperty('--hm-o', (seg(p, .26, .36) * (1 - seg(p, .56, .68))).toFixed(3));
+    s.setProperty('--fd-o', seg(p, .76, .92).toFixed(3));
+    const sd = seg(p, .80, .92);
+    s.setProperty('--sd-o', sd.toFixed(3));
+    s.setProperty('--sd-pe', sd > .6 ? 'auto' : 'none');
+    s.setProperty('--bl-o', easeOut(seg(p, .84, .93)).toFixed(3));
+    kpis.forEach((k, i) => {
+      const t = seg(p, .86 + i * .025, .95 + i * .008);
+      s.setProperty('--k' + i, easeOut(t).toFixed(3));
+      setKpi(k, t);
+    });
     $('.h-lock').style.pointerEvents = p < .2 ? 'auto' : 'none';
   }
   // 화면에 있을 때만 렌더 루프
@@ -88,7 +116,8 @@
   // 범례
   const legend = $('#legend');
   D.units.forEach(u => {
-    const b = el('button', 'lg', `<i style="--c:${u.color}"></i><b>${u.ko}</b><small>${u.ids.length}종</small>`);
+    const b = el('button', 'lg', `<i style="--c:${u.color}"></i><b>${u.short}</b><small>${u.ids.length}종</small>`);
+    b.title = u.ko;
     b.dataset.unit = u.key;
     b.addEventListener('mouseenter', () => focusUnit(u.key));
     b.addEventListener('mouseleave', () => focusUnit(null));
@@ -116,7 +145,10 @@
   const grid = $('#grid'), cnt = $('#cnt'), none = $('#none'), q = $('#q'), tabs = $('#tabs');
   let unit = '*', qtext = '', pick = null, view = [], skTimer = null;
   tabs.appendChild(el('button', 'tab on', `전체 <b>${D.products.length}</b>`)).dataset.unit = '*';
-  D.units.forEach(u => { const t = el('button', 'tab', `${u.ko} <b>${u.ids.length}</b>`); t.dataset.unit = u.key; tabs.appendChild(t); });
+  D.units.forEach(u => { const t = el('button', 'tab', `${u.short} <b>${u.ids.length}</b>`); t.dataset.unit = u.key; t.title = u.ko; tabs.appendChild(t); });
+  // 탭이 한 줄에 다 들어가면 오른쪽 흐림 효과를 끈다
+  const fitTabs = () => tabs.classList.toggle('fit', tabs.scrollWidth <= tabs.clientWidth + 1);
+  addEventListener('resize', fitTabs);
   tabs.addEventListener('click', e => { const t = e.target.closest('.tab'); if (t) setUnit(t.dataset.unit); });
   q.addEventListener('input', () => { qtext = q.value.trim().toLowerCase(); pick = null; render(); });
   function setUnit(k) {
@@ -150,7 +182,7 @@
         const c = el('button', 'card', `
           <span class="th"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy" decoding="async"></span>
           <span class="ut"><i style="--c:${u.color}"></i>${u.ko}</span>
-          <h3>${esc(p.name)}</h3><span class="md">${esc(p.model)}</span>
+          <h3>${esc(p.name)}</h3><span class="mdl">${esc(p.model)}</span>
           <p>${esc(p.ov)}</p>`);
         c.addEventListener('click', () => openModal(p.i));
         grid.appendChild(c);
@@ -363,7 +395,10 @@
   /* ── 맨 위로 · 초기화 ───────────────────── */
   $('#toTop').addEventListener('click', () => scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
   render();
+  measureFrame();
+  fitTabs();
   onScroll();
+  if (document.fonts) document.fonts.ready.then(fitTabs);
   // 딥링크 (#p12)
   const m = location.hash.match(/^#p(\d+)$/);
   if (m && byId[+m[1]]) setTimeout(() => openModal(+m[1]), 600);
